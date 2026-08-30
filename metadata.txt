@@ -1,0 +1,16 @@
+[general]
+name=MSA: ShadowCast
+qgisMinimumVersion=3.0
+qgisMaximumVersion=3.99
+description=Wektorowa analiza cieni budynków 2.5D z poprawnymi relacjami wysokościowymi
+about=Wtyczka generuje precyzyjną geometrię wektorową cieni rzucanych przez budynki na poziom terenu oraz na dachy innych budynków. Eliminuje błędy prostego rzutowania 2D (brak fałszywych cieni na dachach wyższych obiektów, scalanie cieni per budynek).
+version=1.0.0
+author=Mikołaj Sazonov
+email=shadowcast@sazonov.work
+tracker=https://github.com/mikolajsazonov-bit/msa-shadowcast/issues
+repository=https://github.com/mikolajsazonov-bit/msa-shadowcast
+category=Vector
+icon=icon.png
+experimental=False
+deprecated=False
+tags=shadows, solar, buildings, 2.5d, sun, urban, analysis, vector, architecture, gis
