@@ -24,6 +24,10 @@ from qgis.core import (
     QgsProcessingParameterNumber,
     QgsProcessingParameterString,
     QgsProcessingParameterFeatureSink,
+    QgsProcessingUtils,
+    QgsVectorLayer,
+    QgsFillSymbol,
+    QgsSingleSymbolRenderer,
     QgsFeature,
     QgsFeatureSink,
     QgsGeometry,
@@ -301,7 +305,7 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
             "<h3>MSA: ShadowCaster - Wektorowa Analiza Cieni 2.5D</h3>"
             "<p>Narzędzie generuje fizycznie poprawne wektory cieni rzucanych przez budynki:</p>"
             "<ul>"
-            "<li><b>Cienie na gruncie:</b> Zunifikowane poligony cieni terenu z wyciętymi obrysami budynków (brak fałszywych cieni na dachach wyższych obiektów).</li>"
+            "<li><b>Cienie na gruncie:</b> Zunifikowane poligony cieni terenu ze stylem półprzezroczystym (50% czarny, bez obrysu) oraz wyciętymi obrysami budynków.</li>"
             "<li><b>Cienie na dachach:</b> Scalone poligony zacienienia dachów niższych obiektów (1 obiekt per budynek, bez nakładających się duplikatów).</li>"
             "<li><b>Statystyki budynków:</b> Warstwa wejściowa wzbogacona o pole powierzchni dachu, powierzchnię zacienioną oraz procent zacienienia dachu.</li>"
             "</ul>"
@@ -735,4 +739,41 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         if sink_stats is not None:
             results[self.OUTPUT_BUILDINGS_STATS] = dest_stats
 
+        self.output_results = results
         return results
+
+    def postProcessAlgorithm(self, context, feedback):
+        """
+        Automatyczne nadawanie stylu warstwom wynikowym cieni:
+        Czarny z 50% przezroczystością (Alpha 128) i bez obrysu zewnętrznego.
+        """
+        results = getattr(self, 'output_results', {})
+        for out_key in [self.OUTPUT_GROUND_SHADOWS, self.OUTPUT_ROOF_SHADOWS]:
+            dest_id = results.get(out_key)
+            if not dest_id:
+                continue
+
+            layer = QgsProcessingUtils.mapLayerFromString(dest_id, context)
+            if layer is not None and isinstance(layer, QgsVectorLayer):
+                # Styl: Czarny 50% przezroczystości (0,0,0,128), styl wypełnienia solid, brak linii konturu
+                symbol = QgsFillSymbol.createSimple({
+                    'color': '0,0,0,128',
+                    'style': 'solid',
+                    'outline_style': 'no',
+                    'outline_color': '0,0,0,0'
+                })
+                layer.setRenderer(QgsSingleSymbolRenderer(symbol))
+                layer.triggerRepaint()
+
+                # Jeśli warstwa jest zapisana na dysku, zapisz plik stylu .qml obok
+                try:
+                    source_path = layer.source()
+                    if source_path and not source_path.startswith('memory:'):
+                        clean_path = source_path.split('|')[0]
+                        if clean_path.endswith(('.gpkg', '.shp', '.geojson', '.sqlite')):
+                            qml_path = clean_path.rsplit('.', 1)[0] + '.qml'
+                            layer.saveNamedStyle(qml_path)
+                except Exception:
+                    pass
+
+        return super().postProcessAlgorithm(context, feedback)
