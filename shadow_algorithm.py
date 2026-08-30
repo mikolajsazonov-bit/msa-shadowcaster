@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 ***************************************************************************
-*   MSA: ShadowCast - Algorytm Geoprocesingu dla QGIS 3.x                 *
+*   MSA: ShadowCaster - Algorytm Geoprocesingu dla QGIS 3.x               *
 *   Autor: Mikołaj Sazonov                                                *
 *   Opis: Wektorowa analiza cieni budynków 2.5D z eliminacją błędów 2D   *
 ***************************************************************************
@@ -261,7 +261,7 @@ def construct_polygon_shadow(geom, dx, dy):
 
 class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
     """
-    Główny algorytm MSA: ShadowCast.
+    Główny algorytm MSA: ShadowCaster.
     """
 
     INPUT = 'INPUT'
@@ -288,7 +288,7 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         return 'shadow_analysis_25d'
 
     def displayName(self):
-        return self.tr('MSA: ShadowCast (Wektorowa analiza cieni 2.5D)')
+        return self.tr('MSA: ShadowCaster (Wektorowa analiza cieni 2.5D)')
 
     def group(self):
         return self.tr('Analiza Solarna')
@@ -298,7 +298,7 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
 
     def shortHelpString(self):
         return self.tr(
-            "<h3>MSA: ShadowCast - Wektorowa Analiza Cieni 2.5D</h3>"
+            "<h3>MSA: ShadowCaster - Wektorowa Analiza Cieni 2.5D</h3>"
             "<p>Narzędzie generuje fizycznie poprawne wektory cieni rzucanych przez budynki:</p>"
             "<ul>"
             "<li><b>Cienie na gruncie:</b> Zunifikowane poligony cieni terenu z wyciętymi obrysami budynków (brak fałszywych cieni na dachach wyższych obiektów).</li>"

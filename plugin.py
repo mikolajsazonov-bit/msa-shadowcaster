@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 ***************************************************************************
-*   MSA: ShadowCast - Główna klasa wtyczki QGIS                           *
+*   MSA: ShadowCaster - Główna klasa wtyczki QGIS                         *
 *   Autor: Mikołaj Sazonov                                                *
 ***************************************************************************
 """
@@ -14,12 +14,12 @@ from qgis.PyQt.QtWidgets import QAction
 from qgis.core import QgsApplication
 import processing
 
-from .shadow_provider import MSAShadowCastProvider
+from .shadow_provider import MSAShadowCasterProvider
 
 
-class MSAShadowCastPlugin(object):
+class MSAShadowCasterPlugin(object):
     """
-    Główna klasa wtyczki MSA: ShadowCast dla QGIS 3.x.
+    Główna klasa wtyczki MSA: ShadowCaster dla QGIS 3.x.
     """
 
     def __init__(self, iface):
@@ -29,10 +29,10 @@ class MSAShadowCastPlugin(object):
         self.plugin_dir = os.path.dirname(__file__)
 
     def tr(self, message):
-        return QCoreApplication.translate('MSAShadowCastPlugin', message)
+        return QCoreApplication.translate('MSAShadowCasterPlugin', message)
 
     def initProcessing(self):
-        self.provider = MSAShadowCastProvider()
+        self.provider = MSAShadowCasterProvider()
         QgsApplication.processingRegistry().addProvider(self.provider)
 
     def initGui(self):
@@ -43,26 +43,26 @@ class MSAShadowCastPlugin(object):
 
         self.action = QAction(
             icon,
-            self.tr('MSA: ShadowCast - Analiza Cieni Budynków'),
+            self.tr('MSA: ShadowCaster - Analiza Cieni Budynków'),
             self.iface.mainWindow()
         )
-        self.action.setStatusTip(self.tr('Uruchom analizę cieni budynków 2.5D (MSA: ShadowCast)'))
+        self.action.setStatusTip(self.tr('Uruchom analizę cieni budynków 2.5D (MSA: ShadowCaster)'))
         self.action.triggered.connect(self.run)
 
         # Dodanie do paska narzędzi i menu Wektor
         self.iface.addVectorToolBarIcon(self.action)
-        self.iface.addPluginToVectorMenu(self.tr('MSA: ShadowCast'), self.action)
+        self.iface.addPluginToVectorMenu(self.tr('MSA: ShadowCaster'), self.action)
 
     def unload(self):
         if self.provider is not None:
             QgsApplication.processingRegistry().removeProvider(self.provider)
 
         if self.action is not None:
-            self.iface.removePluginVectorMenu(self.tr('MSA: ShadowCast'), self.action)
+            self.iface.removePluginVectorMenu(self.tr('MSA: ShadowCaster'), self.action)
             self.iface.removeVectorToolBarIcon(self.action)
 
     def run(self):
         """
-        Otwiera okno dialogowe algorytmu MSA: ShadowCast.
+        Otwiera okno dialogowe algorytmu MSA: ShadowCaster.
         """
-        processing.execAlgorithmDialog('msa_shadowcast:shadow_analysis_25d')
+        processing.execAlgorithmDialog('msa_shadowcaster:shadow_analysis_25d')

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 ***************************************************************************
-*   MSA: ShadowCast - QgsProcessingProvider dla QGIS 3.x                  *
+*   MSA: ShadowCaster - QgsProcessingProvider dla QGIS 3.x                *
 *   Autor: Mikołaj Sazonov                                                *
 ***************************************************************************
 """
@@ -13,19 +13,19 @@ from qgis.core import QgsProcessingProvider
 from .shadow_algorithm import MSAShadowAnalysis25DAlgorithm
 
 
-class MSAShadowCastProvider(QgsProcessingProvider):
+class MSAShadowCasterProvider(QgsProcessingProvider):
     """
-    Dostawca algorytmów analizy słonecznej MSA: ShadowCast w panelu Narzędzi geoprocesingu.
+    Dostawca algorytmów analizy słonecznej MSA: ShadowCaster w panelu Narzędzi geoprocesingu.
     """
 
     def __init__(self):
         super().__init__()
 
     def id(self):
-        return 'msa_shadowcast'
+        return 'msa_shadowcaster'
 
     def name(self):
-        return 'MSA: ShadowCast'
+        return 'MSA: ShadowCaster'
 
     def icon(self):
         icon_path = os.path.join(os.path.dirname(__file__), 'icon.png')

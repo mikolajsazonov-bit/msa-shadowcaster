@@ -1,12 +1,12 @@
-# MSA: ShadowCast — 2.5D Building Shadow Vector Analysis for QGIS
+# MSA: ShadowCaster — 2.5D Building Shadow Vector Analysis for QGIS
 
 [![QGIS 3.x](https://img.shields.io/badge/QGIS-3.0%2B-589632.svg?logo=qgis&logoColor=white)](https://qgis.org/)
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Python: 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB.svg?logo=python&logoColor=white)](https://python.org/)
 
-**MSA: ShadowCast** is a high-performance QGIS plugin and Processing algorithm designed for accurate, physically consistent 2.5D vector shadow analysis of building footprints.
+**MSA: ShadowCaster** is a high-performance QGIS plugin and Processing algorithm designed for accurate, physically consistent 2.5D vector shadow analysis of building footprints.
 
-Unlike naive 2D shadow extrusion tools that erroneously cast shadows across roofs of taller adjacent buildings, **MSA: ShadowCast** calculates true inter-building height relationships and generates clean, topology-validated vector layers for both **Ground Shadows** and **Roof Shadows**.
+Unlike naive 2D shadow extrusion tools that erroneously cast shadows across roofs of taller adjacent buildings, **MSA: ShadowCaster** calculates true inter-building height relationships and generates clean, topology-validated vector layers for both **Ground Shadows** and **Roof Shadows**.
 
 ---
 
@@ -45,20 +45,20 @@ Where:
 ## 🚀 Installation
 
 ### Option 1: Copy to QGIS Plugins Folder
-Copy the `msa_shadowcast` directory to your active QGIS profile's python plugins directory:
+Copy the `msa_shadowcaster` directory to your active QGIS profile's python plugins directory:
 
 - **macOS:** `~/Library/Application Support/QGIS/QGIS3/profiles/default/python/plugins/`
 - **Linux:** `~/.local/share/QGIS/QGIS3/profiles/default/python/plugins/`
 - **Windows:** `%APPDATA%\QGIS\QGIS3\profiles\default\python\plugins\`
 
-Then open QGIS, go to **Plugins -> Manage and Install Plugins... -> Installed**, and enable **MSA: ShadowCast**.
+Then open QGIS, go to **Plugins -> Manage and Install Plugins... -> Installed**, and enable **MSA: ShadowCaster**.
 
 ---
 
 ## 🖥️ Usage
 
 1. Open QGIS.
-2. Click the **MSA: ShadowCast** icon on the Vector toolbar, or navigate to **Vector -> MSA: ShadowCast**, or find it in **Processing Toolbox -> Analiza Solarna -> MSA: ShadowCast**.
+2. Click the **MSA: ShadowCaster** icon on the Vector toolbar, or navigate to **Vector -> MSA: ShadowCaster**, or find it in **Processing Toolbox -> Analiza Solarna -> MSA: ShadowCaster**.
 3. Configure the parameters:
    - **Input Layer:** Building polygon/multipolygon layer in a projected metric coordinate reference system (e.g., EPSG:2180 / UTM).
    - **Height Field:** Select attribute with storey count or height.

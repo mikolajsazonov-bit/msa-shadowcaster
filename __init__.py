@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 ***************************************************************************
-*   MSA: ShadowCast - Punkt wejściowy wtyczki QGIS                        *
+*   MSA: ShadowCaster - Punkt wejściowy wtyczki QGIS                      *
 *   Autor: Mikołaj Sazonov                                                *
 ***************************************************************************
 """
@@ -11,5 +11,5 @@ def classFactory(iface):
     """
     Fabryka wtyczki wywoływana przez QGIS do załadowania wtyczki.
     """
-    from .plugin import MSAShadowCastPlugin
-    return MSAShadowCastPlugin(iface)
+    from .plugin import MSAShadowCasterPlugin
+    return MSAShadowCasterPlugin(iface)
