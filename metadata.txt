@@ -9,6 +9,7 @@ author=Mikołaj Sazonov
 email=shadowcast@sazonov.work
 tracker=https://github.com/mikolajsazonov-bit/msa-shadowcaster/issues
 repository=https://github.com/mikolajsazonov-bit/msa-shadowcaster
+homepage=https://github.com/mikolajsazonov-bit/msa-shadowcaster
 category=Vector
 icon=icon.png
 experimental=False
