@@ -2,8 +2,10 @@
 name=MSA: ShadowCaster
 qgisMinimumVersion=3.0
 qgisMaximumVersion=3.99
-description=Wektorowa analiza cieni budynków 2.5D z poprawnymi relacjami wysokościowymi
-about=Wtyczka generuje precyzyjną geometrię wektorową cieni rzucanych przez budynki na poziom terenu oraz na dachy innych budynków. Eliminuje błędy prostego rzutowania 2D (brak fałszywych cieni na dachach wyższych obiektów, scalanie cieni per budynek).
+description=2.5D building shadow vector analysis with accurate height and roof relationships
+about=Generates physically accurate vector geometries of shadows cast by buildings onto ground terrain and onto lower building roofs. Eliminates 2D casting artifacts (no false shadows on roofs of taller structures, unified per-building shadow polygons). Includes automatic 50% opacity styling and sidecar QML generation.
+description[pl]=Wektorowa analiza cieni budynków 2.5D z poprawnymi relacjami wysokościowymi
+about[pl]=Wtyczka generuje precyzyjną geometrię wektorową cieni rzucanych przez budynki na poziom terenu oraz na dachy innych budynków. Eliminuje błędy prostego rzutowania 2D (brak fałszywych cieni na dachach wyższych obiektów, scalanie cieni per budynek). Automatycznie nadaje styl z 50% przezroczystością i tworzy pliki stylów QML.
 version=1.0.0
 author=Mikołaj Sazonov
 email=shadowcaster@sazonov.work

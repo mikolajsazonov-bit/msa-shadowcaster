@@ -280,8 +280,9 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
     OUTPUT_ROOF_SHADOWS = 'OUTPUT_ROOF_SHADOWS'
     OUTPUT_BUILDINGS_STATS = 'OUTPUT_BUILDINGS_STATS'
 
-    def tr(self, string):
-        return QCoreApplication.translate('MSAShadowAnalysis25DAlgorithm', string)
+    def tr(self, message_en: str, message_pl: str = None) -> str:
+        from .i18n import tr as i18n_tr
+        return i18n_tr(message_en, message_pl, 'MSAShadowAnalysis25DAlgorithm')
 
     def createInstance(self):
         return MSAShadowAnalysis25DAlgorithm()
@@ -290,16 +291,24 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         return 'shadow_analysis_25d'
 
     def displayName(self):
-        return self.tr('MSA: ShadowCaster (Wektorowa analiza cieni 2.5D)')
+        return self.tr('MSA: ShadowCaster (2.5D Building Shadow Analysis)', 'MSA: ShadowCaster (Wektorowa analiza cieni 2.5D)')
 
     def group(self):
-        return self.tr('Analiza Solarna')
+        return self.tr('Solar Analysis', 'Analiza Solarna')
 
     def groupId(self):
         return 'solar_shadows'
 
     def shortHelpString(self):
         return self.tr(
+            "<h3>MSA: ShadowCaster - 2.5D Vector Shadow Analysis</h3>"
+            "<p>Generates physically accurate 2.5D vector shadows cast by buildings:</p>"
+            "<ul>"
+            "<li><b>Ground shadows:</b> Unified terrain shadow polygons with semi-transparent styling (50% black, no outline) and cut-out building footprints.</li>"
+            "<li><b>Roof shadows:</b> Merged shadow polygons on lower building roofs (1 feature per building, no duplicate overlaps).</li>"
+            "<li><b>Building statistics:</b> Enriched input layer with roof area, shaded area, and shade percentage.</li>"
+            "</ul>"
+            "<p><b>Field support:</b> Storey count / height field can be numeric or string (e.g. '3', '4.5', '2 storeys').</p>",
             "<h3>MSA: ShadowCaster - Wektorowa Analiza Cieni 2.5D</h3>"
             "<p>Narzędzie generuje fizycznie poprawne wektory cieni rzucanych przez budynki:</p>"
             "<ul>"
@@ -314,7 +323,7 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterFeatureSource(
                 self.INPUT,
-                self.tr('Warstwa wejściowa budynków (Poligony)'),
+                self.tr('Input buildings layer (Polygons)', 'Warstwa wejściowa budynków (Poligony)'),
                 [QgsProcessing.TypeVectorPolygon]
             )
         )
@@ -322,10 +331,10 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterEnum(
                 self.HEIGHT_MODE,
-                self.tr('Sposób określenia wysokości budynku'),
+                self.tr('Building height definition method', 'Sposób określenia wysokości budynku'),
                 options=[
-                    self.tr('Liczba kondygnacji (mnożona przez wysokość kondygnacji)'),
-                    self.tr('Wysokość bezpośrednio w metrach')
+                    self.tr('Number of storeys (multiplied by storey height)', 'Liczba kondygnacji (mnożona przez wysokość kondygnacji)'),
+                    self.tr('Height directly in meters', 'Wysokość bezpośrednio w metrach')
                 ],
                 defaultValue=0
             )
@@ -334,7 +343,7 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterField(
                 self.HEIGHT_FIELD,
-                self.tr('Pole z liczbą kondygnacji lub wysokością (tekstowe lub numeryczne)'),
+                self.tr('Storey count or height field (numeric or text)', 'Pole z liczbą kondygnacji lub wysokością (tekstowe lub numeryczne)'),
                 parentLayerParameterName=self.INPUT,
                 type=QgsProcessingParameterField.Any,
                 defaultValue='LICZBAKONDYGNACJI'
@@ -344,7 +353,7 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterNumber(
                 self.STOREY_HEIGHT,
-                self.tr('Wysokość jednej kondygnacji [m] (gdy wybrano liczbę kondygnacji)'),
+                self.tr('Single storey height [m]', 'Wysokość jednej kondygnacji [m] (gdy wybrano liczbę kondygnacji)'),
                 type=QgsProcessingParameterNumber.Double,
                 defaultValue=3.0,
                 minValue=0.5,
@@ -355,10 +364,10 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterEnum(
                 self.SUN_INPUT_MODE,
-                self.tr('Tryb wyznaczenia pozycji słońca'),
+                self.tr('Sun position input mode', 'Tryb wyznaczenia pozycji słońca'),
                 options=[
-                    self.tr('Ręczne podanie Azymutu i Kąta elewacji'),
-                    self.tr('Automatyczne wyliczenie z Daty, Czasu i Lokalizacji')
+                    self.tr('Manual Sun Azimuth and Elevation angle', 'Ręczne podanie Azymutu i Kąta elewacji'),
+                    self.tr('Calculate from Date, Time and Location', 'Automatyczne wyliczenie z Daty, Czasu i Lokalizacji')
                 ],
                 defaultValue=1
             )
@@ -367,7 +376,7 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterNumber(
                 self.SUN_AZIMUTH,
-                self.tr('Azymut słońca [0-360°] (Ręczny)'),
+                self.tr('Sun Azimuth [0-360°] (Manual)', 'Azymut słońca [0-360°] (Ręczny)'),
                 type=QgsProcessingParameterNumber.Double,
                 defaultValue=180.0,
                 minValue=0.0,
@@ -378,7 +387,7 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterNumber(
                 self.SUN_ELEVATION,
-                self.tr('Elewacja / wysokość słońca nad horyzontem [0-90°] (Ręczna)'),
+                self.tr('Sun Elevation [0-90°] (Manual)', 'Elewacja / wysokość słońca nad horyzontem [0-90°] (Ręczna)'),
                 type=QgsProcessingParameterNumber.Double,
                 defaultValue=45.0,
                 minValue=0.5,
@@ -389,7 +398,7 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterString(
                 self.DATETIME_STR,
-                self.tr('Data i godzina lokalna (RRRR-MM-DD GG:MM:SS)'),
+                self.tr('Local date and time (YYYY-MM-DD HH:MM:SS)', 'Data i godzina lokalna (RRRR-MM-DD GG:MM:SS)'),
                 defaultValue='2026-06-21 12:00:00'
             )
         )
@@ -397,7 +406,7 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterNumber(
                 self.UTC_OFFSET,
-                self.tr('Strefa czasowa / przesunięcie UTC [godziny] (np. +2 dla Polski w lecie)'),
+                self.tr('Timezone / UTC offset [hours] (e.g. +2 for Poland in summer)', 'Strefa czasowa / przesunięcie UTC [godziny] (np. +2 dla Polski w lecie)'),
                 type=QgsProcessingParameterNumber.Double,
                 defaultValue=2.0,
                 minValue=-12.0,
@@ -409,7 +418,7 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterFeatureSink(
                 self.OUTPUT_GROUND_SHADOWS,
-                self.tr('Cienie na gruncie (Ground Shadows - Scalone)'),
+                self.tr('Ground shadows (Merged)', 'Cienie na gruncie (Ground Shadows - Scalone)'),
                 QgsProcessing.TypeVectorPolygon
             )
         )
@@ -417,7 +426,7 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterFeatureSink(
                 self.OUTPUT_ROOF_SHADOWS,
-                self.tr('Cienie na dachach (Roof Shadows - Scalone per budynek)'),
+                self.tr('Roof shadows (Merged per building)', 'Cienie na dachach (Roof Shadows - Scalone per budynek)'),
                 QgsProcessing.TypeVectorPolygon
             )
         )
@@ -425,7 +434,7 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterFeatureSink(
                 self.OUTPUT_BUILDINGS_STATS,
-                self.tr('Budynki ze statystykami nasłonecznienia'),
+                self.tr('Buildings with shade statistics', 'Budynki ze statystykami nasłonecznienia'),
                 QgsProcessing.TypeVectorPolygon,
                 optional=True
             )

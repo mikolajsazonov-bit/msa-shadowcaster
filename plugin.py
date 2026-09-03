@@ -28,8 +28,9 @@ class MSAShadowCasterPlugin(object):
         self.action = None
         self.plugin_dir = os.path.dirname(__file__)
 
-    def tr(self, message):
-        return QCoreApplication.translate('MSAShadowCasterPlugin', message)
+    def tr(self, message_en: str, message_pl: str = None) -> str:
+        from .i18n import tr as i18n_tr
+        return i18n_tr(message_en, message_pl, 'MSAShadowCasterPlugin')
 
     def initProcessing(self):
         self.provider = MSAShadowCasterProvider()
@@ -43,15 +44,18 @@ class MSAShadowCasterPlugin(object):
 
         self.action = QAction(
             icon,
-            self.tr('MSA: ShadowCaster - Analiza Cieni Budynków'),
+            self.tr('MSA: ShadowCaster - Building Shadow Analysis', 'MSA: ShadowCaster - Analiza Cieni Budynków'),
             self.iface.mainWindow()
         )
-        self.action.setStatusTip(self.tr('Uruchom analizę cieni budynków 2.5D (MSA: ShadowCaster)'))
+        self.action.setStatusTip(self.tr(
+            'Run 2.5D building shadow vector analysis (MSA: ShadowCaster)',
+            'Uruchom analizę cieni budynków 2.5D (MSA: ShadowCaster)'
+        ))
         self.action.triggered.connect(self.run)
 
         # Dodanie do paska narzędzi i menu Wektor
         self.iface.addVectorToolBarIcon(self.action)
-        self.iface.addPluginToVectorMenu(self.tr('MSA: ShadowCaster'), self.action)
+        self.iface.addPluginToVectorMenu(self.tr('MSA: ShadowCaster', 'MSA: ShadowCaster'), self.action)
 
     def unload(self):
         if self.provider is not None:
