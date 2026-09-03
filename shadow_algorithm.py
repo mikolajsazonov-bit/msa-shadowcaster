@@ -65,14 +65,12 @@ def parse_height_value(raw_val, default=1.0):
     try:
         return float(s)
     except ValueError:
-        pass
-
-    match = re.search(r'[-+]?\d*\.?\d+', s)
-    if match:
-        try:
-            return float(match.group())
-        except ValueError:
-            pass
+        match = re.search(r'[-+]?\d*\.?\d+', s)
+        if match:
+            try:
+                return float(match.group())
+            except ValueError:
+                return default
 
     return default
 
@@ -773,7 +771,8 @@ class MSAShadowAnalysis25DAlgorithm(QgsProcessingAlgorithm):
                         if clean_path.endswith(('.gpkg', '.shp', '.geojson', '.sqlite')):
                             qml_path = clean_path.rsplit('.', 1)[0] + '.qml'
                             layer.saveNamedStyle(qml_path)
-                except Exception:
-                    pass
+                except Exception as err:
+                    if feedback:
+                        feedback.pushDebugInfo(f"Sidecar .qml style notice: {err}")
 
         return super().postProcessAlgorithm(context, feedback)
